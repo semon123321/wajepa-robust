@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 import platform
 from pathlib import Path
@@ -24,7 +25,8 @@ def fault_list():
 
 def dataset(config, limit=None):
     return OpenSceneSubset(config["metadata"], config["sensors"], config["scene_filter"],
-                           limit=limit, stride=config.get("stride", 1), logs=config.get("logs"))
+                           limit=limit, stride=config.get("stride", 1), logs=config.get("logs"),
+                           tokens=config.get("tokens"))
 
 
 def evaluate(args, config):
@@ -61,6 +63,7 @@ def evaluate(args, config):
               "model_commit": UPSTREAM_COMMIT, "precision": "bfloat16", "sampling_steps": 4,
               "inference_seed": 1, "gpu": torch.cuda.get_device_name(), "torch": torch.__version__,
               "python": platform.python_version(), "adapter": bool(args.adapter),
+              "adapter_sha256": hashlib.sha256(Path(args.adapter).read_bytes()).hexdigest() if args.adapter else None,
               "peak_reserved_gb": torch.cuda.max_memory_reserved()/1e9,
               "metrics": summarize(rows)}
     dump(out / "summary.json", result)
@@ -77,6 +80,12 @@ def cache(args, config):
         features, _, info = data[i]
         destination = out / (info["token"] + ".pt")
         if destination.exists():
+            if args.with_action:
+                item = torch.load(destination, map_location="cpu", weights_only=True)
+                if "teacher_rollout" not in item:
+                    item["teacher_rollout"] = model.teacher_rollout(features)
+                    torch.save(item, destination)
+                    print(f"teacher cache {i+1}/{len(data)}", flush=True)
             continue
         clean = model.encode(features)
         contexts, statuses = [], []
@@ -87,8 +96,10 @@ def cache(args, config):
                 corrupted, status = apply_fault(features, fault)
                 contexts.append(model.encode(corrupted))
                 statuses.append(status.cpu())
-        torch.save({"clean": clean, "corrupt": torch.cat(contexts),
-                    "status": torch.cat(statuses), **info}, destination)
+        item = {"clean": clean, "corrupt": torch.cat(contexts), "status": torch.cat(statuses), **info}
+        if args.with_action:
+            item["teacher_rollout"] = model.teacher_rollout(features)
+        torch.save(item, destination)
         print(f"cache {i+1}/{len(data)} {info['log']}", flush=True)
 
 
@@ -161,6 +172,8 @@ def train(args):
                         "train_logs": [l for l in logs if l not in val_logs], "val_logs": sorted(val_logs)},
                        out/"adapter.pt")
         dump(out/"training.json", {"parameters": sum(p.numel() for p in adapter.parameters()),
+                                   "seed": args.seed, "lr": args.lr, "rank": args.rank,
+                                   "use_age": not args.no_age, "weight_decay": 0.01,
                                    "train_scenes": len(train_data), "val_scenes": len(val_data),
                                    "train_logs": [l for l in logs if l not in val_logs],
                                    "val_logs": sorted(val_logs), "history": history})
@@ -177,6 +190,8 @@ def main():
         p.add_argument("--limit", type=int)
         if name == "evaluate":
             p.add_argument("--adapter")
+        else:
+            p.add_argument("--with-action", action="store_true")
     p = sub.add_parser("train")
     p.add_argument("--cache", required=True)
     p.add_argument("--output", required=True)

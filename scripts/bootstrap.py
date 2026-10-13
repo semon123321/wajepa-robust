@@ -26,8 +26,41 @@ ASSETS = {
 }
 
 
-def download(url, destination, expected=None):
+def download(url, destination, expected=None, expected_size=None):
     destination.parent.mkdir(parents=True, exist_ok=True)
+    if expected_size and not destination.exists():
+        # Bounded transfers tolerate proxies that terminate very large streams.
+        partial = destination.with_suffix(destination.suffix + ".partial")
+        failures = 0
+        last_print = time.monotonic()
+        while (partial.stat().st_size if partial.exists() else 0) < expected_size:
+            offset = partial.stat().st_size if partial.exists() else 0
+            end = min(offset + 64*1024*1024, expected_size) - 1
+            separator = "&" if "?" in url else "?"
+            request = urllib.request.Request(f"{url}{separator}download=true&range={offset}-{end}",
+                                             headers={"Range":f"bytes={offset}-{end}"})
+            try:
+                with urllib.request.urlopen(request,timeout=60) as response:
+                    content_range = response.headers.get("Content-Range", "")
+                    if response.status!=206 or not content_range.startswith(f"bytes {offset}-"):
+                        raise IOError("Server did not honor requested resume offset")
+                    remaining = end-offset+1
+                    with partial.open("ab" if offset else "wb") as stream:
+                        while remaining:
+                            block=response.read(min(4*1024*1024,remaining))
+                            if not block:
+                                raise IOError("Truncated range response")
+                            stream.write(block);remaining-=len(block)
+                failures=0
+                if time.monotonic()-last_print>30:
+                    print(f"{destination.name}: {partial.stat().st_size/1e6:.0f}/{expected_size/1e6:.0f} MB",flush=True)
+                    last_print=time.monotonic()
+            except Exception as error:
+                failures+=1
+                print(f"range retry {destination.name}: {type(error).__name__}",flush=True)
+                if failures>=5:
+                    raise
+        partial.replace(destination)
     if not destination.exists():
         partial = destination.with_suffix(destination.suffix + ".partial")
         for attempt in range(5):
@@ -39,6 +72,8 @@ def download(url, destination, expected=None):
                 request = urllib.request.Request(request_url, headers={"Range": f"bytes={offset}-"} if offset else {})
                 with urllib.request.urlopen(request, timeout=90) as response:
                     append = offset > 0 and response.status == 206
+                    if append and not response.headers.get("Content-Range", "").startswith(f"bytes {offset}-"):
+                        raise IOError("Server returned the wrong resume offset")
                     offset = offset if append else 0
                     total = offset + int(response.headers.get("Content-Length", 0))
                     done = offset

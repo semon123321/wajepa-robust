@@ -82,6 +82,21 @@ python scripts/expand_data.py --mini 6 4 21 19 --test 19 25 15
 
 ## 证据与限制
 
+第一轮真实数据结果已公开：[开发实验 1](reports/dev_v1/README.md)。
+在同一批 27 个片段中，纯特征重建适配对延迟和连续丢帧有小幅改善，
+但相机全黑条件变差，四种退化条件的平均 ADE 没有改善。
+这轮负面结果完整保留，不能用于宣称整体性能提升。
+
+后续实验增加规划目标：缓存干净模型实际四步 flow 轨迹，在冻结的联合
+世界/动作预测器上反向传播，仅更新小适配器，补充动作和未来 latent 一致性。
+未来 latent 来自模型预测，不使用记录的未来 RGB。
+
+```bash
+wajepa-robust cache --config local_train.json --output cache/train --with-action
+python -m wajepa_robust.action_distillation --config local_train.json --cache cache/train --output runs/action_probe --probe-only
+python -m wajepa_robust.action_distillation --config local_train.json --cache cache/train --output runs/adapter_action --epochs 10
+```
+
 结果和逐场景预测将保存在 `reports/`，包含模型 revision、数据 SHA256、GPU、
 采样设置、真实样本 token 和训练记录。完整实验约束见
 [实验协议](docs/EXPERIMENT_PROTOCOL.md)。

@@ -1,0 +1,58 @@
+{
+  "blackout_v1_d1": {
+    "delta_ade_m": 0.19050767410684516,
+    "log_bootstrap_95pct": [
+      -0.09714671845237415,
+      0.43053971230983734
+    ],
+    "independent_logs": 3,
+    "caution": "Few logs give unreliable intervals; smoke evidence only.",
+    "baseline_ade_m": 1.1677792326167777,
+    "adapter_ade_m": 1.358286906723623
+  },
+  "clean": {
+    "delta_ade_m": 0.0,
+    "log_bootstrap_95pct": [
+      0.0,
+      0.0
+    ],
+    "independent_logs": 3,
+    "caution": "Few logs give unreliable intervals; smoke evidence only.",
+    "baseline_ade_m": 0.4779496325386895,
+    "adapter_ade_m": 0.4779496325386895
+  },
+  "hold_v1_d1": {
+    "delta_ade_m": -0.061329019290429575,
+    "log_bootstrap_95pct": [
+      -0.0690295934677124,
+      -0.030336397886276244
+    ],
+    "independent_logs": 3,
+    "caution": "Few logs give unreliable intervals; smoke evidence only.",
+    "baseline_ade_m": 1.308215630275232,
+    "adapter_ade_m": 1.2468866109848022
+  },
+  "stale_v1_d1": {
+    "delta_ade_m": -0.01637048688199785,
+    "log_bootstrap_95pct": [
+      -0.03733601917823156,
+      0.02300177812576294
+    ],
+    "independent_logs": 3,
+    "caution": "Few logs give unreliable intervals; smoke evidence only.",
+    "baseline_ade_m": 0.5998457868893942,
+    "adapter_ade_m": 0.5834753000073962
+  },
+  "stale_v1_d2": {
+    "delta_ade_m": -0.06105056405067444,
+    "log_bootstrap_95pct": [
+      -0.10707607269287109,
+      0.004199254512786865
+    ],
+    "independent_logs": 3,
+    "caution": "Few logs give unreliable intervals; smoke evidence only.",
+    "baseline_ade_m": 0.8295193645689223,
+    "adapter_ade_m": 0.7684688005182478
+  },
+  "clean_prediction_max_abs_delta": 0.0
+}

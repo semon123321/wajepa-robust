@@ -23,6 +23,25 @@ ego poses are absent from the adapter training cache. The approach is an
 engineering research hypothesis, without a global novelty claim. A reduction in
 latent MSE does not establish a reduction in trajectory error.
 
+### Second intervention after the recorded development result
+
+The context-only experiment produced mixed planning outcomes (see dev_v1).
+Add a task-aligned objective through the **frozen official joint predictor**:
+cache its four-step clean flow states; sample a step and require corrupted-history
+adaptation to match its action endpoint and 256 uniformly sampled future-scene
+tokens. Teacher future latents are imagined by the model from history, not read
+from future dataset frames. Loss = XY action smooth L1 in meters + 0.1 future
+token MSE + 0.1 corrupted-history reconstruction MSE. These weights are an initial
+engineering choice, not selected with test ADE. Choose checkpoint with held-out
+log action distillation error. Clean path remains exactly identity. Freeze every
+official parameter; offload unused encoders during cached-feature training.
+
+The backward probe passed on the local GPU at 4.423 GB peak reserved memory,
+with nonzero adapter gradients and zero official-parameter gradient tensors.
+Probe success establishes executable training, not improved driving performance.
+The original three test logs now serve as disclosed development logs. Additional
+test shards must be held out for a final comparison after this intervention.
+
 ## Data and leakage controls
 
 - Official OpenScene, based on nuPlan; four views in upstream order L0/F0/R0/B0.

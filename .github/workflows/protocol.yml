@@ -1,0 +1,14 @@
+name: Protocol invariants
+on: [push, pull_request]
+jobs:
+  cpu-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install torch==2.9.1 torchvision==0.24.1 --index-url https://download.pytorch.org/whl/cpu
+      - run: pip install -e .
+      - run: python -m unittest discover -s tests -v
+      - run: python -m compileall -q src scripts

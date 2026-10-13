@@ -34,13 +34,19 @@ def pose(frame):
 
 
 class OpenSceneSubset:
-    def __init__(self, metadata, sensors, scene_filter, limit=None, stride=1, logs=None):
+    def __init__(self, metadata, sensors, scene_filter, limit=None, stride=1, logs=None, tokens=None):
         self.sensors = Path(sensors)
         self.filter_path = Path(scene_filter)
         filt = yaml.safe_load(self.filter_path.read_text(encoding="utf-8"))
         self.filter_sha256 = hashlib.sha256(self.filter_path.read_bytes()).hexdigest()
         allowed_logs = set(filt["log_names"]) if filt.get("log_names") else None
         allowed_tokens = set(filt["tokens"]) if filt.get("tokens") else None
+        if tokens is not None:
+            if allowed_tokens is None:
+                raise ValueError("Custom token subsets require an official token filter.")
+            if set(tokens) - allowed_tokens:
+                raise ValueError("Requested tokens fall outside the official split.")
+            allowed_tokens &= set(tokens)
         if filt["num_history_frames"] != 4:
             raise ValueError("This adapter expects the official four-frame history.")
         total = 4 + int(filt["num_future_frames"])

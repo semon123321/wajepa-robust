@@ -30,13 +30,13 @@ def main():
         for index in ids:
             name = f"openscene_sensor_{split}_camera_{index}.tgz"
             info = tree[name]
-            requested.append((info["path"], info["lfs"]["oid"]))
+            requested.append((info["path"], info["lfs"]["oid"], info["size"]))
 
     def fetch(item):
-        path, checksum = item
+        path, checksum, size = item
         url = f"https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/{DATA_REV}/{path}"
         filename = args.root/"archives"/Path(path).name
-        record = download(url,filename,checksum)
+        record = download(url,filename,checksum,expected_size=size)
         marker = args.root/(filename.name+".extracted")
         if not marker.exists():
             with tarfile.open(filename) as archive:

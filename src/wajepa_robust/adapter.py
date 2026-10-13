@@ -29,6 +29,8 @@ class ReliabilityAdapter(nn.Module):
         x = tokens.reshape(b, 4, 2, 512, d)
         meta = status.reshape(b, 2, 2, 4, 2).mean(2).permute(0, 2, 1, 3)
         gate = ((meta[..., 0] < 1) | (meta[..., 1] > 0)).float()
+        if not torch.any(gate):
+            return tokens
         good = (1 - gate)[..., None, None]
         healthy = (x * good).sum((1, 2, 3)) / (good.sum((1, 2, 3)) * 512).clamp_min(1)
         conditioning = meta.clone()

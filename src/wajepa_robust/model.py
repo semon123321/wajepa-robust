@@ -65,3 +65,32 @@ class OfficialModel:
             trajectory = self.model.predict_trajectory(features)
         torch.cuda.synchronize()
         return trajectory[0].float().cpu().numpy(), time.perf_counter() - start
+
+    def teacher_rollout(self, features):
+        """Record the clean model's actual four-step sampler states for distillation.
+
+        No recorded future is used: these are the model's imagined latent states.
+        Targets belong only to the training cache and never enter evaluation.
+        """
+        records = []
+        indices = torch.linspace(0, 8191, 256, device="cuda").long()
+
+        def before(module, args, kwargs):
+            records.append({"scene": kwargs["noisy_future_scene"].detach().cpu(),
+                            "trajectory": kwargs["trajectory_inputs"]["noisy_trajectory"].detach().cpu(),
+                            "t": kwargs["t_cont"].detach().cpu()})
+
+        def after(module, args, kwargs, outputs):
+            records[-1]["target_action"] = outputs[1].detach().cpu()
+            records[-1]["target_scene"] = outputs[0][:, indices].detach().cpu()
+
+        pre = self.model.predictor.register_forward_pre_hook(before, with_kwargs=True)
+        post = self.model.predictor.register_forward_hook(after, with_kwargs=True)
+        try:
+            self.predict(features)
+        finally:
+            pre.remove()
+            post.remove()
+        return {"steps": records, "scene_indices": indices.cpu(),
+                "history_trajectory": features["history_trajectory"].cpu(),
+                "ego_status": features["ego_status"].cpu()}

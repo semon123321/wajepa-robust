@@ -1,0 +1,32 @@
+[
+  {
+    "file": "model_state_dict.pt",
+    "url": "https://huggingface.co/AFARI-Research/WA-JEPA/resolve/15c0770ebd233665214590bb2190a90907499f9e/model_state_dict.pt",
+    "bytes": 1575763741,
+    "sha256": "e1d3be013de7dbaa5a6c30925a0d2f91e6ce1a6b17a75ca73fe01a1abe6d6408"
+  },
+  {
+    "file": "metadata_test.tgz",
+    "url": "https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_metadata_test.tgz",
+    "bytes": 476034809,
+    "sha256": "871ba786da584e03f5151924674ab006e83782f796a979ee5dd144b5c6dca1ab"
+  },
+  {
+    "file": "camera_test_30.tgz",
+    "url": "https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_30.tgz",
+    "bytes": 1629921998,
+    "sha256": "67a9c6ca0cb7ed650e93e2790425f8676f4749125e72f6f9f9f003eedfc36c57"
+  },
+  {
+    "file": "metadata_mini.tgz",
+    "url": "https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_metadata_mini.tgz",
+    "bytes": 534344190,
+    "sha256": "c2e08867e062ba916eccd56df191e728d42fb94de854c28f2226eed14cecd8be"
+  },
+  {
+    "file": "camera_mini_5.tgz",
+    "url": "https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_sensor_mini_camera/openscene_sensor_mini_camera_5.tgz",
+    "bytes": 1767757511,
+    "sha256": "74df953723507a8dcd778c6d1feb2ef2a3e57b799a6e3b35f1728cb72384a595"
+  }
+]
