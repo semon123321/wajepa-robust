@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wajepa-robust"
+version = "0.1.0"
+description = "Reproducible WA-JEPA camera degradation evaluation and lightweight latent adaptation"
+requires-python = ">=3.11"
+dependencies = ["numpy", "torch", "torchvision", "timm==0.9.16", "omegaconf", "einops", "opencv-python-headless", "pyquaternion", "PyYAML", "matplotlib"]
+
+[project.scripts]
+wajepa-robust = "wajepa_robust.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
