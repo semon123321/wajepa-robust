@@ -13,6 +13,7 @@ import torch
 from torch.nn import functional as F
 from .adapter import ReliabilityAdapter
 from .model import OfficialModel
+from .metrics import source_drive
 
 
 class FrozenFlowTeacher:
@@ -76,7 +77,9 @@ def main():
     logs = sorted({s["log"] for s in manifest["scenes"]})
     if len(logs)<2:
         raise ValueError("Need independent train and validation logs.")
-    val_logs = set(logs[-max(1,len(logs)//5):])
+    drives=sorted({source_drive(l) for l in logs})
+    val_drives=set(drives[-max(1,len(drives)//5):])
+    val_logs={l for l in logs if source_drive(l) in val_drives}
     train_files, val_files = [], []
     for info in manifest["scenes"]:
         (val_files if info["log"] in val_logs else train_files).append(args.cache/(info["token"]+".pt"))

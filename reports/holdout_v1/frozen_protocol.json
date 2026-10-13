@@ -26,5 +26,6 @@
     "src\\wajepa_robust\\hybrid.py": "9d6bdd140427d38c393c0ada63832423bd109d6a17b53ce29248c47eed356634",
     "src\\wajepa_robust\\metrics.py": "701cf3a4e8ff4ce2eda1b3957268299b4b2f7185d6fbf84695a7ce7ed63df4fd",
     "src\\wajepa_robust\\model.py": "c79611d73af34157c4807022a784c0b9e44925d34ccf900f868e07cc1acd30f7"
-  }
+  },
+  "hybrid_safetensors_sha256": "726085723a29167d658bff9d48fa60c925b0f563a4a850400e4d66ed4e38ab9a"
 }

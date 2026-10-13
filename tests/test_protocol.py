@@ -10,10 +10,16 @@ from wajepa_robust.baselines import ReliabilityControl
 from wajepa_robust.hybrid import HybridAdapter
 from wajepa_robust.corruptions import Fault, apply_fault
 from wajepa_robust.data import relative_poses, pose
-from wajepa_robust.metrics import displacement, paired_log_bootstrap
+from wajepa_robust.metrics import displacement, paired_log_bootstrap, source_drive
 
 
 class ProtocolTests(unittest.TestCase):
+    def test_segments_from_same_source_drive_form_one_statistical_cluster(self):
+        left='2021.09.09.14.18.22_veh-48_00221_00299'
+        right='2021.09.09.14.18.22_veh-48_01298_01492'
+        self.assertEqual(source_drive(left),source_drive(right))
+        self.assertEqual(source_drive('simple-log'), 'simple-log')
+
     def test_hybrid_dispatch_reads_sensor_status_only(self):
         from torch import nn
         class Marker(nn.Module):

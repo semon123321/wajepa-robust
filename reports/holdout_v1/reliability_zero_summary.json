@@ -1,0 +1,71 @@
+{
+  "scope": "OpenScene shard subset; offline displacement, NOT official EPDMS or closed-loop score",
+  "model_commit": "bec29660f5ea46ac73db8e2d0c33c8d1a72c23ad",
+  "precision": "bfloat16",
+  "sampling_steps": 4,
+  "inference_seed": 1,
+  "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "torch": "2.9.1+cu128",
+  "python": "3.12.10",
+  "adapter": false,
+  "adapter_sha256": null,
+  "fixed_reliability_control": "zero",
+  "peak_reserved_gb": 2.13909504,
+  "metrics": {
+    "blackout_v1_d1": {
+      "n": 30,
+      "logs": 4,
+      "source_drives": 3,
+      "ade_m": 1.268522372841835,
+      "fde_m": 3.306676310300827,
+      "l2_1s_m": 0.18556851421793302,
+      "l2_2s_m": 0.7102643373111884,
+      "l2_3s_m": 1.7937919462720553,
+      "latency_s": 1.180980760010425
+    },
+    "clean": {
+      "n": 30,
+      "logs": 4,
+      "source_drives": 3,
+      "ade_m": 0.6218171902000904,
+      "fde_m": 1.4983870418121417,
+      "l2_1s_m": 0.1242726769298315,
+      "l2_2s_m": 0.4024499960243702,
+      "l2_3s_m": 0.874606027143697,
+      "latency_s": 1.1746993066665405
+    },
+    "hold_v1_d1": {
+      "n": 30,
+      "logs": 4,
+      "source_drives": 3,
+      "ade_m": 1.094968330860138,
+      "fde_m": 2.612328993777434,
+      "l2_1s_m": 0.2461129209647576,
+      "l2_2s_m": 0.7090290802841385,
+      "l2_3s_m": 1.5153189377238354,
+      "latency_s": 1.1803331866646962
+    },
+    "stale_v1_d1": {
+      "n": 30,
+      "logs": 4,
+      "source_drives": 3,
+      "ade_m": 0.9258716414372127,
+      "fde_m": 2.2281451811393103,
+      "l2_1s_m": 0.13007570523768663,
+      "l2_2s_m": 0.6048635985702276,
+      "l2_3s_m": 1.3510100722312928,
+      "latency_s": 1.1803695266697711
+    },
+    "stale_v1_d2": {
+      "n": 30,
+      "logs": 4,
+      "source_drives": 3,
+      "ade_m": 1.1628111104170482,
+      "fde_m": 2.9449102198084196,
+      "l2_1s_m": 0.17146086605886618,
+      "l2_2s_m": 0.6879963806519905,
+      "l2_3s_m": 1.6197623724738757,
+      "latency_s": 1.1829189200031882
+    }
+  }
+}

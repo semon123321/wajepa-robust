@@ -50,7 +50,8 @@ test shards must be held out for a final comparison after this intervention.
 - Four history frames at 2 Hz; eight predicted poses (4 seconds). Preserve the
   official filter's additional future frames for scene eligibility.
 - Record every token/log and filter hash. Manifest overlaps must be rejected.
-- Adapter train/validation division is by **log**, never random overlapping
+- Adapter train/validation division is by **original source drive** (group log
+  segments with the same drive prefix), never random overlapping
   windows. Select checkpoints using validation context MSE only. Test trajectory
   metrics must not choose training epochs or hyperparameters.
 - Navigation is the available metadata command; no inference from future poses.
@@ -92,7 +93,7 @@ without camera geometry.
 
 - Offline ADE/FDE in meters, eight 0.5-second points; L2 at 1/2/3 s.
 - Clean trajectory equality and clean-regression check.
-- Paired log-bootstrap delta ADE, resampling logs due to correlated windows.
+- Paired drive-bootstrap delta ADE, grouping source-drive log segments due to correlated windows.
 - Inference wall time after warmup, CUDA synchronized, excluding disk/image IO;
   GPU/precision/peak reserved memory recorded. No real-time deployment claim.
 - Official EPDMS with NAVSIM maps/scorer is a separate later gate; offline

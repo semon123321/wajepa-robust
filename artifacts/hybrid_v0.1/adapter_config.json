@@ -1,0 +1,25 @@
+{
+  "kind": "hybrid",
+  "context_architecture": {
+    "dim": 512,
+    "rank": 32,
+    "use_age": true
+  },
+  "action_architecture": {
+    "dim": 512,
+    "rank": 32,
+    "use_age": true
+  },
+  "train_logs": [
+    "2021.06.09.14.58.55_veh-35_01894_02311",
+    "2021.06.09.17.23.18_veh-38_02526_03027",
+    "2021.10.11.02.57.41_veh-50_00352_00535"
+  ],
+  "val_logs": [
+    "2021.10.11.07.12.18_veh-50_00211_00304"
+  ],
+  "routing": "missing -> action distillation; burst old frames -> fixed reliability; other stale -> context distillation",
+  "development_selection": "Routing chosen with disclosed dev_v1 three logs; held-out logs not used.",
+  "source_pt_sha256": "7e2cc7de321212fcf5e7e586f6db7e240e565b6a989f52338b5b7bf2bfb38059",
+  "safetensors_sha256": "726085723a29167d658bff9d48fa60c925b0f563a4a850400e4d66ed4e38ab9a"
+}

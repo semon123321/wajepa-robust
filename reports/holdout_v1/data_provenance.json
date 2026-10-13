@@ -1,0 +1,10 @@
+[
+  {
+    "file": "openscene_sensor_test_camera_19.tgz",
+    "dataset_path": "openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_19.tgz",
+    "revision": "a76f840b65e972bc45e56c2adced897498e9a026",
+    "sha256": "c13da2ba74d77c85a847b0a5767b524ce793d7f45021cc520c3aa46c45860c16",
+    "bytes": 2062047425,
+    "url": "https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/a76f840b65e972bc45e56c2adced897498e9a026/openscene-v1.1/openscene_sensor_test_camera/openscene_sensor_test_camera_19.tgz"
+  }
+]

@@ -13,7 +13,7 @@ from .baselines import ReliabilityControl
 from .hybrid import HybridAdapter
 from .corruptions import Fault, apply_fault
 from .data import OpenSceneSubset
-from .metrics import displacement, summarize
+from .metrics import displacement, summarize, source_drive
 from .model import OfficialModel, UPSTREAM_COMMIT
 
 
@@ -42,10 +42,15 @@ def evaluate(args, config):
             raise ValueError("Evaluate fixed controls and learned adapters separately.")
         model.adapter = ReliabilityControl(args.repair).eval().to("cuda")
     if args.adapter:
-        saved = torch.load(args.adapter, map_location="cpu", weights_only=True)
+        if Path(args.adapter).suffix==".safetensors":
+            from safetensors.torch import load_file
+            saved=json.loads(Path(args.adapter).with_name("adapter_config.json").read_text())
+            saved["state_dict"]=load_file(args.adapter)
+        else:
+            saved = torch.load(args.adapter, map_location="cpu", weights_only=True)
         eval_logs = {s["log"] for s in data.manifest()["scenes"]}
         adaptation_logs = set(saved["train_logs"]) | set(saved["val_logs"])
-        if eval_logs & adaptation_logs:
+        if {source_drive(l) for l in eval_logs} & {source_drive(l) for l in adaptation_logs}:
             raise ValueError("Evaluation logs overlap adapter training/validation logs.")
         if saved.get("kind")=="hybrid":
             adapter = HybridAdapter(saved["context_architecture"],saved["action_architecture"])
@@ -124,7 +129,9 @@ def train(args):
     logs = sorted({s["log"] for s in manifest["scenes"]})
     if len(logs) < 2:
         raise ValueError("Need separate training and validation logs.")
-    val_logs = set(logs[-max(1, len(logs)//5):])
+    drives=sorted({source_drive(l) for l in logs})
+    val_drives=set(drives[-max(1,len(drives)//5):])
+    val_logs = {l for l in logs if source_drive(l) in val_drives}
     train_data, val_data = [], []
     for file in files:
         value = torch.load(file, map_location="cpu", weights_only=True)

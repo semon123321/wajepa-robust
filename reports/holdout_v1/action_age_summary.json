@@ -1,0 +1,71 @@
+{
+  "scope": "OpenScene shard subset; offline displacement, NOT official EPDMS or closed-loop score",
+  "model_commit": "bec29660f5ea46ac73db8e2d0c33c8d1a72c23ad",
+  "precision": "bfloat16",
+  "sampling_steps": 4,
+  "inference_seed": 1,
+  "gpu": "NVIDIA GeForce RTX 5070 Laptop GPU",
+  "torch": "2.9.1+cu128",
+  "python": "3.12.10",
+  "adapter": true,
+  "adapter_sha256": "a02553010ab5337e1dc3b759b7aaf268ea33badcf47408c79c3e8bef163df2ac",
+  "fixed_reliability_control": null,
+  "peak_reserved_gb": 2.13909504,
+  "metrics": {
+    "blackout_v1_d1": {
+      "n": 30,
+      "logs": 4,
+      "source_drives": 3,
+      "ade_m": 1.1175092721978823,
+      "fde_m": 3.0562120720744135,
+      "l2_1s_m": 0.16508385756363472,
+      "l2_2s_m": 0.5869367162386576,
+      "l2_3s_m": 1.5157261586437623,
+      "latency_s": 1.1990532866659729
+    },
+    "clean": {
+      "n": 30,
+      "logs": 4,
+      "source_drives": 3,
+      "ade_m": 0.6218171902000904,
+      "fde_m": 1.4983870418121417,
+      "l2_1s_m": 0.1242726769298315,
+      "l2_2s_m": 0.4024499960243702,
+      "l2_3s_m": 0.874606027143697,
+      "latency_s": 1.1926302666659467
+    },
+    "hold_v1_d1": {
+      "n": 30,
+      "logs": 4,
+      "source_drives": 3,
+      "ade_m": 1.117378116150697,
+      "fde_m": 2.588963324824969,
+      "l2_1s_m": 0.2514365065842867,
+      "l2_2s_m": 0.7368570513402423,
+      "l2_3s_m": 1.5825160196051002,
+      "latency_s": 1.1953591500059702
+    },
+    "stale_v1_d1": {
+      "n": 30,
+      "logs": 4,
+      "source_drives": 3,
+      "ade_m": 0.8766313711802165,
+      "fde_m": 2.0296172127127647,
+      "l2_1s_m": 0.14048992625127235,
+      "l2_2s_m": 0.5864153852065405,
+      "l2_3s_m": 1.286778839925925,
+      "latency_s": 1.1969146366658
+    },
+    "stale_v1_d2": {
+      "n": 30,
+      "logs": 4,
+      "source_drives": 3,
+      "ade_m": 1.0529817536473274,
+      "fde_m": 2.4039097229639688,
+      "l2_1s_m": 0.18020756064603727,
+      "l2_2s_m": 0.7260025841494401,
+      "l2_3s_m": 1.5339368859926859,
+      "latency_s": 1.1987128766699848
+    }
+  }
+}
