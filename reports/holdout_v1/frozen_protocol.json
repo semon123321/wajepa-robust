@@ -1,0 +1,30 @@
+{
+  "frozen_at_utc": "2026-10-13T14:05:27.608508+00:00",
+  "hybrid_sha256": "7e2cc7de321212fcf5e7e586f6db7e240e565b6a989f52338b5b7bf2bfb38059",
+  "context_sha256": "91f62b6b4d930bef5c84dfee5493733db8386dfd3b028878bccc3315ff5a0c3f",
+  "action_sha256": "a02553010ab5337e1dc3b759b7aaf268ea33badcf47408c79c3e8bef163df2ac",
+  "route": "availability<1 -> action; early two current + late stale -> reliability zero (tau=.5s); other stale -> context; clean -> identity",
+  "selection": "Routing selected on original three development logs; no held-out model predictions examined yet.",
+  "conditions": [
+    "clean",
+    "blackout_v1_d1",
+    "stale_v1_d1",
+    "stale_v1_d2",
+    "hold_v1_d1"
+  ],
+  "n_scenes": 30,
+  "n_logs": 4,
+  "manifest_sha256": "c4d375c1c77b641a12e469f97ee31789515f006aeb81d4b2a1c4ec3cfde444cd",
+  "source_sha256": {
+    "src\\wajepa_robust\\__init__.py": "ac76cebbdb766ed81e888286bc32b11b9267dc3d4938514611e28621e9b31052",
+    "src\\wajepa_robust\\action_distillation.py": "55a0f801d8196ff0b41dd6bb819cf8cbd2ac3055d6aa8a41ac1ce8d551d7ce7f",
+    "src\\wajepa_robust\\adapter.py": "4e77258933b7e0035fb8656ddc15d28f141cb630038f640094dca25af03c906a",
+    "src\\wajepa_robust\\baselines.py": "838e4c29baeed1c0d572a81efa772954f0b9f45a85ffb8b78c54c906e9048aba",
+    "src\\wajepa_robust\\cli.py": "2d0c4ba6dd91813e04e7b06655c57a383691e9dc4e2375931a840094a3411b76",
+    "src\\wajepa_robust\\corruptions.py": "10246172bf20bf707727021dfddd6109eb06ddca342faabb666d08c2871f2a94",
+    "src\\wajepa_robust\\data.py": "239e36c158edc926f254cc3166a4d7324a5e1a7592a860957fc5bfedb9428a10",
+    "src\\wajepa_robust\\hybrid.py": "9d6bdd140427d38c393c0ada63832423bd109d6a17b53ce29248c47eed356634",
+    "src\\wajepa_robust\\metrics.py": "701cf3a4e8ff4ce2eda1b3957268299b4b2f7185d6fbf84695a7ce7ed63df4fd",
+    "src\\wajepa_robust\\model.py": "c79611d73af34157c4807022a784c0b9e44925d34ccf900f868e07cc1acd30f7"
+  }
+}

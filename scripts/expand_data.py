@@ -6,6 +6,7 @@ Archive selection is based on download size, not observed test model errors.
 import argparse
 import concurrent.futures
 import json
+import os
 from pathlib import Path
 import tarfile
 import urllib.request
@@ -18,7 +19,16 @@ def main():
     parser.add_argument("--mini", type=int, nargs="*", default=[])
     parser.add_argument("--test", type=int, nargs="*", default=[])
     parser.add_argument("--workers", type=int, default=2)
+    parser.add_argument("--backend", choices=["http","hf"], default="http")
     args = parser.parse_args()
+    if args.backend=="hf":
+        # Windows registry proxy settings are not automatically read by httpx.
+        proxy=urllib.request.getproxies().get("https")
+        if proxy:
+            os.environ.setdefault("HTTPS_PROXY",proxy)
+            os.environ.setdefault("HTTP_PROXY",proxy)
+        os.environ.setdefault("HF_HUB_DISABLE_XET","1")
+        from huggingface_hub import hf_hub_download
     requested = []
     for split in ("mini", "test"):
         ids = getattr(args, split)
@@ -36,8 +46,15 @@ def main():
         path, checksum, size = item
         url = f"https://huggingface.co/datasets/OpenDriveLab/OpenScene/resolve/{DATA_REV}/{path}"
         filename = args.root/"archives"/Path(path).name
-        record = download(url,filename,checksum,expected_size=size)
-        marker = args.root/(filename.name+".extracted")
+        if args.backend=="hf":
+            cached=Path(hf_hub_download("OpenDriveLab/OpenScene",path,repo_type="dataset",revision=DATA_REV,
+                                       cache_dir=args.root/"hf-cache"))
+            record=download(url,cached,checksum)
+            record["file"]=Path(path).name
+            filename=cached
+        else:
+            record = download(url,filename,checksum,expected_size=size)
+        marker = args.root/(Path(path).name+".extracted")
         if not marker.exists():
             with tarfile.open(filename) as archive:
                 archive.extractall(args.root/"openscene",filter="data")

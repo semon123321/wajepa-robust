@@ -1,0 +1,70 @@
+{
+  "parameters": 52032,
+  "train_scenes": 45,
+  "val_scenes": 15,
+  "train_logs": [
+    "2021.06.09.14.58.55_veh-35_01894_02311",
+    "2021.06.09.17.23.18_veh-38_02526_03027",
+    "2021.10.11.02.57.41_veh-50_00352_00535"
+  ],
+  "val_logs": [
+    "2021.10.11.07.12.18_veh-50_00211_00304"
+  ],
+  "history": [
+    {
+      "epoch": 1,
+      "updates": 45,
+      "train_action": 0.03388432638926638,
+      "val_action": 0.10400083086763819,
+      "val_future_mse": 0.010911579814273865,
+      "val_context_mse": 0.6572929481665294
+    },
+    {
+      "epoch": 2,
+      "updates": 90,
+      "train_action": 0.02877541301358077,
+      "val_action": 0.10205044037041565,
+      "val_future_mse": 0.010912360964963834,
+      "val_context_mse": 0.6561560352643331
+    },
+    {
+      "epoch": 3,
+      "updates": 135,
+      "train_action": 0.03369656544592645,
+      "val_action": 0.1070778123413523,
+      "val_future_mse": 0.010829816785796234,
+      "val_context_mse": 0.6544297099113464
+    },
+    {
+      "epoch": 4,
+      "updates": 180,
+      "train_action": 0.027190984185371133,
+      "val_action": 0.11391723879302541,
+      "val_future_mse": 0.010759845094677681,
+      "val_context_mse": 0.6521223306655883
+    },
+    {
+      "epoch": 5,
+      "updates": 225,
+      "train_action": 0.01854370071863135,
+      "val_action": 0.11591760274798919,
+      "val_future_mse": 0.010632273987478886,
+      "val_context_mse": 0.6493616779645284
+    },
+    {
+      "epoch": 6,
+      "updates": 240,
+      "train_action": 0.006230340525507927,
+      "val_action": 0.11598769643848451,
+      "val_future_mse": 0.01058169428918821,
+      "val_context_mse": 0.6484577924013137
+    }
+  ],
+  "wall_time_s": 422.51600000000326,
+  "loss_weights": {
+    "action": 1,
+    "sampled_future": 0.1,
+    "context": 0.1
+  },
+  "peak_reserved_gb": 4.720689152
+}

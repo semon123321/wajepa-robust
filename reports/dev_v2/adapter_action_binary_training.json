@@ -1,0 +1,74 @@
+{
+  "parameters": 52032,
+  "train_scenes": 45,
+  "seed": 42,
+  "lr": 0.0001,
+  "use_age": false,
+  "weight_decay": 0.01,
+  "val_scenes": 15,
+  "train_logs": [
+    "2021.06.09.14.58.55_veh-35_01894_02311",
+    "2021.06.09.17.23.18_veh-38_02526_03027",
+    "2021.10.11.02.57.41_veh-50_00352_00535"
+  ],
+  "val_logs": [
+    "2021.10.11.07.12.18_veh-50_00211_00304"
+  ],
+  "history": [
+    {
+      "epoch": 1,
+      "updates": 45,
+      "train_action": 0.03361869722397791,
+      "val_action": 0.10396426839288324,
+      "val_future_mse": 0.010908086318522692,
+      "val_context_mse": 0.6573079029719034
+    },
+    {
+      "epoch": 2,
+      "updates": 90,
+      "train_action": 0.028433796835856305,
+      "val_action": 0.10194206653783719,
+      "val_future_mse": 0.01090624470380135,
+      "val_context_mse": 0.6561854461828868
+    },
+    {
+      "epoch": 3,
+      "updates": 135,
+      "train_action": 0.03377524447730846,
+      "val_action": 0.10689864422699126,
+      "val_future_mse": 0.010835672006942331,
+      "val_context_mse": 0.654506441950798
+    },
+    {
+      "epoch": 4,
+      "updates": 180,
+      "train_action": 0.027306494334091744,
+      "val_action": 0.11448290459811687,
+      "val_future_mse": 0.010763721387290086,
+      "val_context_mse": 0.652300218741099
+    },
+    {
+      "epoch": 5,
+      "updates": 225,
+      "train_action": 0.018306455212748714,
+      "val_action": 0.1169300450477749,
+      "val_future_mse": 0.010639853523268053,
+      "val_context_mse": 0.6496773709853491
+    },
+    {
+      "epoch": 6,
+      "updates": 240,
+      "train_action": 0.006376037281006575,
+      "val_action": 0.1167325010309772,
+      "val_future_mse": 0.010592294049759705,
+      "val_context_mse": 0.6488362451394399
+    }
+  ],
+  "wall_time_s": 346.71899999998277,
+  "loss_weights": {
+    "action": 1,
+    "sampled_future": 0.1,
+    "context": 0.1
+  },
+  "peak_reserved_gb": 4.720689152
+}

@@ -9,6 +9,8 @@ import numpy as np
 import torch
 
 from .adapter import ReliabilityAdapter
+from .baselines import ReliabilityControl
+from .hybrid import HybridAdapter
 from .corruptions import Fault, apply_fault
 from .data import OpenSceneSubset
 from .metrics import displacement, summarize
@@ -35,13 +37,20 @@ def evaluate(args, config):
     data = dataset(config, args.limit)
     dump(out / "manifest.json", data.manifest())
     model = OfficialModel(config["upstream"], config["checkpoint"])
+    if args.repair:
+        if args.adapter:
+            raise ValueError("Evaluate fixed controls and learned adapters separately.")
+        model.adapter = ReliabilityControl(args.repair).eval().to("cuda")
     if args.adapter:
         saved = torch.load(args.adapter, map_location="cpu", weights_only=True)
         eval_logs = {s["log"] for s in data.manifest()["scenes"]}
         adaptation_logs = set(saved["train_logs"]) | set(saved["val_logs"])
         if eval_logs & adaptation_logs:
             raise ValueError("Evaluation logs overlap adapter training/validation logs.")
-        adapter = ReliabilityAdapter(**saved["architecture"])
+        if saved.get("kind")=="hybrid":
+            adapter = HybridAdapter(saved["context_architecture"],saved["action_architecture"])
+        else:
+            adapter = ReliabilityAdapter(**saved["architecture"])
         adapter.load_state_dict(saved["state_dict"], strict=True)
         model.adapter = adapter.eval().to("cuda")
     rows = []
@@ -64,6 +73,7 @@ def evaluate(args, config):
               "inference_seed": 1, "gpu": torch.cuda.get_device_name(), "torch": torch.__version__,
               "python": platform.python_version(), "adapter": bool(args.adapter),
               "adapter_sha256": hashlib.sha256(Path(args.adapter).read_bytes()).hexdigest() if args.adapter else None,
+              "fixed_reliability_control": args.repair,
               "peak_reserved_gb": torch.cuda.max_memory_reserved()/1e9,
               "metrics": summarize(rows)}
     dump(out / "summary.json", result)
@@ -190,6 +200,7 @@ def main():
         p.add_argument("--limit", type=int)
         if name == "evaluate":
             p.add_argument("--adapter")
+            p.add_argument("--repair", choices=["zero","healthy_mean"])
         else:
             p.add_argument("--with-action", action="store_true")
     p = sub.add_parser("train")

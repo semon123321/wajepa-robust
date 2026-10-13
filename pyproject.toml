@@ -12,5 +12,8 @@ dependencies = ["numpy", "torch", "torchvision", "timm==0.9.16", "omegaconf", "e
 [project.scripts]
 wajepa-robust = "wajepa_robust.cli:main"
 
+[project.optional-dependencies]
+download = ["huggingface-hub>=1"]
+
 [tool.setuptools.packages.find]
 where = ["src"]

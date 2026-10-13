@@ -32,7 +32,7 @@ flowchart LR
 - 复现范围：严格加载官方模型，保留 256×512 输入、L0/F0/R0/B0 顺序、四步采样和固定推理种子。
 - 适配模块：冻结模型，仅训练历史 token 的低秩残差；融合健康相机的池化上下文、相机身份、可用性和画面年龄。
 - 干净输入：适配器走严格恒等映射，避免改进退化场景时破坏正常输入。
-- 训练目标：从受损历史特征恢复干净历史特征；未来图像与未来轨迹均不进入该训练缓存。
+- 训练目标：从受损历史特征恢复干净历史特征；记录的未来图像与真实未来轨迹均不进入该训练缓存。
 - 对照：官方模型、相机全黑、0.5/1 秒画面延迟、连续丢帧保持旧画面，以及无连续帧龄的适配器消融。
 - 验证：轨迹 ADE/FDE、按日志进行配对 bootstrap、延迟、显存及失败案例。
 
@@ -75,6 +75,9 @@ python scripts/report.py --baseline runs/baseline --candidate runs/adapted --out
 ```bash
 python scripts/expand_data.py --mini 6 4 21 19 --test 19 25 15
 # 保持相同配置目录，重新生成 cache manifest 后训练；旧缓存可复用。
+# 大文件 HTTP 不稳定时，可使用经过本机验证的 HF Hub HTTP 下载后端：
+pip install -e ".[download]"
+python scripts/expand_data.py --test 19 25 15 --backend hf
 ```
 
 上述分片按下载体积选定，未按模型测试误差挑选。训练集、验证集、测试集之间
@@ -87,6 +90,11 @@ python scripts/expand_data.py --mini 6 4 21 19 --test 19 25 15
 但相机全黑条件变差，四种退化条件的平均 ADE 没有改善。
 这轮负面结果完整保留，不能用于宣称整体性能提升。
 
+[开发实验 2](reports/dev_v2/README.md)补充冻结世界/动作预测器的训练与
+二值故障信息消融，以及无需训练的显式可靠性对照。当前没有证据证明连续
+帧龄在这些小规模训练下有明显优势。针对不同故障的表现差异，新增一个
+由传感器元数据选择干预方式的组合适配器，并在独立日志上验证。
+
 后续实验增加规划目标：缓存干净模型实际四步 flow 轨迹，在冻结的联合
 世界/动作预测器上反向传播，仅更新小适配器，补充动作和未来 latent 一致性。
 未来 latent 来自模型预测，不使用记录的未来 RGB。
@@ -95,6 +103,8 @@ python scripts/expand_data.py --mini 6 4 21 19 --test 19 25 15
 wajepa-robust cache --config local_train.json --output cache/train --with-action
 python -m wajepa_robust.action_distillation --config local_train.json --cache cache/train --output runs/action_probe --probe-only
 python -m wajepa_robust.action_distillation --config local_train.json --cache cache/train --output runs/adapter_action --epochs 10
+python scripts/compose_adapter.py --context runs/adapter_age/adapter.pt --action runs/adapter_action/adapter.pt --output runs/hybrid/adapter.pt
+wajepa-robust evaluate --config local_test.json --output runs/hybrid_eval --adapter runs/hybrid/adapter.pt
 ```
 
 结果和逐场景预测将保存在 `reports/`，包含模型 revision、数据 SHA256、GPU、
